@@ -16,14 +16,14 @@ We can do this all with a single call, and only have the account information sen
   },
   {
     "doOn": 302,
-    "href": "$headers.location/applications",
+    "href": "${headers.location}/applications",
     "method": "get",
     "data": {},
     "return": false
   },
   {
     "doOn": 200,
-    "href": "$body.items[0].accounts.href?email=jim@jim.ext",
+    "href": "${body.items[0].accounts.href}?email=jim@jim.ext",
     "method": "get",
     "data": {},
     "return": true
