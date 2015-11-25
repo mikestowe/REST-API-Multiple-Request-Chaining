@@ -115,8 +115,71 @@ You can also layer multiple conditional calls by placing them in arrays, creatin
 ```
 
 ##Complex IF Statements
+The `doOn` property accepts an HTTP Status Code, "always" as a string, or a conditional logical IF statements:
+
+#####Simple Equal/ Not Equal
+Logic | Example | Meaning
+------ | --------- | -------
+== | $body.firstName == 'Jim' | firstName in Body response is **equal** to Jim
+!= | $body.firstName != 'Jim' | firstName in Body response is **not equal** to Jim
+\>= | $body.age >= 10 | age in Body response is **greater than or equal** to 10
+<= | $body.age <= 10 | age in Body response is **less than or equal** to 10
+
+#####AND OR STATEMENTS
+Logic | Example | Meaning
+------ | --------- | -------
+&& | $body.firstName != 'Jim' && $body.age >= 10 | First condition **AND** second condition must be matched
+\|\| | $body.firstName != 'Jim' \|\| $body.age >= 10 | Match **EITHER** condition
+
+#####REGULAR EXPRESSIONS
+Logic | Example | Meaning
+------ | --------- | -------
+regex() | regex('/[a-z]/i', $body.firstName) | **Match** a regular expression
+!regex() | regex('/[a-z]/i', $body.firstName) | Does **not match** regular expression
+
+###Complex Example:
+```
+[
+  {
+    "doOn": "always",
+    "href": "/users/5",
+    "method": "get",
+    "data": {},
+    "return": [
+        "firstName", "lastName", "email", "_links"
+    ]
+  },
+  {
+    "doOn": "($body.firstName == "Jim" && $body.lastName == "Smith") || regex('/Jim/i', $body.email)",
+    "href" : "$body._links.messages",
+    "method": "get",
+    "data": {
+        "emailAddress": "$body.email"
+    },
+    "return": true,
+  }
+]
+```
+
 
 ##Responses
+Because conditional chaining and errors are possible when using API Chaining, the response object needs to return three primary properties:
+
+Property | Type | Definition
+-------- | ---- | ----------
+callsReqested | integer | The number of conditionally applicable calls requested in the chain - this will not necessarily be the total number of calls in the request
+callsCompleted | integer | The number of calls that were completed successfully.  This helps indicate an error IF the chain had multiple calls, but a condition could not be matched and therefore caused the chain to exit
+responses | array | the list of applicable responses to the API chain calls that were performed, including the last call that could either be executed either because the chain was completed or exited due to being unable to meet a necessary condition.
+
+Within the responses array, each call object needs to include:
+
+Property | Definition | Example
+-------- | ---------- | -------
+href | the full path of the call that was attempted | /users?firstName=Jim
+method | the method that was used to make the call | get
+status | the HTTP status code the call returned | 200
+response | a response object containing the headers (as an object) and the body (as an object or string depending on content-type) | "headers" : { "content-type" : "application/json" }, "body" : { "user" : { "firstName" : "Jim" } }
+
 
 ```
 {
