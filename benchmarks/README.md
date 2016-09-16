@@ -7,7 +7,7 @@ Three calls to an API proxy, which in turn then calls a third party service hitt
 
 Note - this was run from my local host, meaning there could be slight performance differences from my localhost PHP server (4gb memory) vs the proxy PHP server (512mb memory).
 
-[benchmark one]: test_1.jpg
+![Benchmark one](/benchmarks/test_1.jpg)
 
 
 ### Test 2
@@ -15,7 +15,7 @@ Identical to test one except that the second call returns back a failure, forcin
 
 Note - this was run from my local host, meaning there could be slight performance differences from my localhost PHP server (4gb memory) vs the proxy PHP server (512mb memory).
 
-[benchmark one]: test_2.jpg
+![Benchmark two](/benchmarks/test_2.jpg)
 
 
 ### Test 3
@@ -23,7 +23,7 @@ Unlike tests 1 and 2 which involve a third party API, test 3 focused on calls wh
 
 Note - this was run from my local host, meaning there could be slight performance differences from my localhost PHP server (4gb memory) vs the proxy PHP server (512mb memory).
 
-[benchmark one]: test_3.jpg
+![Benchmark three](/benchmarks/test_3.jpg)
 
 
 ### Test 4
