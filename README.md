@@ -1,16 +1,16 @@
-#API Chaining
+#REST API Multiple-Request Chaining
 **Note - this is a brainstorming document and should not be considered stable or production ready**
 
 One of the challenges in using RESTful APIs driven by Hypermedia, as well as pulling in numerous and extensive microservices is the requirement to at times make several API calls in order to accomplish the task at hand.  Today, that requires numerous HTTP calls as well, which depending on latency, can greatly slow script execution.
 
-API Chaining is a technique, borrowed from an idea presented by Owen Ruble (@...) during one of his talks, that groups numerous RESTful API calls together in a single HTTP request.
+REST API Multiple-Request Chaining is a technique, borrowed and heavily modified from Owen Rubel's (@BeApi_io) concept of IO State driven APIs, that groups numerous RESTful API calls together in a single HTTP request.
 
 For example, as shown below, instead of having to do GET calls to `/users/5` and then `/messages/?userId=5` you could instead send a chain to a resource such as `/multirequestchain` that would handle the multiple calls for you.
 
-API Chaining is setup to allow for conditional calls, as well as provides back only the data you need (instead of all the data that would be returned from each call).  This can also be used as a technique for data collection similar to that of GraphQL where instead of embedding objects as models, you're able to make numerous calls at once and get back only the data you request.
+REST API Multiple-Request Chaining is setup to allow for conditional calls, as well as provides back only the data you need (instead of all the data that would be returned from each call).  This can also be used as a technique for data collection similar to that of GraphQL where instead of embedding objects as models, you're able to make numerous calls at once and get back only the data you request.
 
-##A Simple API Chain
-Each API Chain is made of 5 components, all required:
+##A Simple REST API Multi-Request Chain
+Each chain is made of 5 components, all required:
 
 
 Component | Description | Example 
@@ -47,13 +47,13 @@ A simple request where you want to retrieve a user's messages, but first need to
 ```
 
 ##Multiple Conditional Calls
-API Chaining works in chronological order, with each call being considered the next highest priority, or the next natural step in the process.
+REST API Multiple-Request Chaining works in chronological order, with each call being considered the next highest priority, or the next natural step in the process.
 
 The `doOn` specifies whether or not the call should be executed based on the previous call's response, or whether it should be skipped for another call that contains a `doOn` that matches the previous HTTP status code, applies a logical IF statement that returns true, or is specified as "always."  In the event that no suitable match is found in the layer of the chain it is currently operating in, the chain will consider this an error and exit - returning back all the data up and including the last call that was attempted.
 
 For example, in our previous chain - IF the `/users/5` call returned a 404, the chain would have exited, providing you the details of that call, but **NOT** attempting the next call `$body._links.messages` as it required a status code of 200.
 
-You can also layer multiple conditional calls by placing them in arrays, creating a new layer in the process.  However, once the API Chain reaches the end of its child layers, it will exit - **NOT** iterating through the remaining parent layers.
+You can also layer multiple conditional calls by placing them in arrays, creating a new layer in the process.  However, once the chain reaches the end of its child layers, it will exit - **NOT** iterating through the remaining parent layers.
 
 ```
 [
@@ -163,7 +163,7 @@ regex() | regex('/[a-z]/i', $body.firstName) | **Match** a regular expression
 
 
 ##Responses
-Because conditional chaining and errors are possible when using API Chaining, the response object needs to return three primary properties:
+Because conditional chaining and errors are possible when using REST API Multiple-Request Chaining, the response object needs to return three primary properties:
 
 Property | Type | Definition
 -------- | ---- | ----------
@@ -214,5 +214,8 @@ response | a response object containing the headers (as an object) and the body 
 
 ##FAQs
 
-###How do you send headers with API Chaining?
-Headers are sent as they always have been, and will automatically be applied to each of the calls requested in the chain.  At this time, API Chaining does not support the ability to send specific headers for each call independently - however, if needed, this may certainly be added in the future.
+###How do you send headers with REST API Multiple-Request Chaining?
+Headers are sent as they always have been, and will automatically be applied to each of the calls requested in the chain.  At this time, REST API Multiple-Request Chaining does not support the ability to send specific headers for each call independently - however, if needed, this may certainly be added in the future.
+
+###How does this vary from IO State Driven APIs
+REST API Multiple-Request Chaining is designed specifically for RESTful APIs utilizing hypermedia over a static or cached state file.  This allows for the available paths to be truly dynamic based on the individual calls within the chain, and also prevents the need to make multiple requests to obtain the IO State or available OPTIONS.  REST API Multiple-Request Chaining is also designed to expand beyond just the use of a primary key, letting you pull in information from the headers and body of the previous call when performing an action on the next chain.  Each link/ call is also conditional, meaning you can specify when that link should be called, and receive the appropriate error response upon a link/ call failure.  For more you can see Owen's IO State implemention [here](https://github.com/orubel/grails-api-toolkit-docs/wiki/API-Chaining).
