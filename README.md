@@ -9,7 +9,7 @@ For example, as shown below, instead of having to do GET calls to `/users/5` and
 
 REST API Multiple-Request Chaining is setup to allow for conditional calls, as well as provides back only the data you need (instead of all the data that would be returned from each call).  This can also be used as a technique for data collection similar to that of GraphQL where instead of embedding objects as models, you're able to make numerous calls at once and get back only the data you request.
 
-##A Simple REST API Multi-Request Chain
+##A Simple REST API Multiple-Request Chain
 Each chain is made of 5 components, all required:
 
 
