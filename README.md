@@ -3,7 +3,7 @@
 
 One of the challenges in using RESTful APIs driven by Hypermedia, as well as pulling in numerous and extensive microservices is the requirement to at times make several API calls in order to accomplish the task at hand.  Today, that requires numerous HTTP calls as well, which depending on latency, can greatly slow script execution.
 
-REST API Multiple-Request Chaining is a technique, borrowed and heavily modified from Owen Rubel's (@BeApi_io) concept of IO State driven APIs, that groups numerous RESTful API calls together in a single HTTP request.
+REST API Multiple-Request Chaining is a technique that groups numerous RESTful API calls together in a single HTTP request.
 
 For example, as shown below, instead of having to do GET calls to `/users/5` and then `/messages/?userId=5` you could instead send a chain to a resource such as `/multirequestchain` that would handle the multiple calls for you.
 
