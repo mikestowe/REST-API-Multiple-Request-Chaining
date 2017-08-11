@@ -1,5 +1,4 @@
 # REST API Multiple-Request Chaining
-**Note - this is a brainstorming document and should not be considered stable or production ready... YET ;)**
 
 One of the challenges in using RESTful APIs driven by Hypermedia, as well as pulling in numerous and extensive microservices is the requirement to at times make several API calls in order to accomplish the task at hand.  Today, that requires numerous HTTP calls as well, which depending on latency, can greatly slow script execution.
 
